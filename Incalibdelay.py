@@ -9,6 +9,7 @@ import xml.etree.cElementTree as ET
 import os
 import numpy as np
 from math import isnan
+import matplotlib.pyplot as plt
 
 
 def ReadFileList(file_dir):
@@ -226,6 +227,18 @@ if __name__ == '__main__':
         dict = IncalibDelay_VH(file_path, dict)
         dict = IncalibDelay_VV(file_path, dict)
 
+    '''
+        # 绘图并保存
+        for key in dict:
+            tdelay = dict[key][0]
+            num = dict[key][1]
+            t = [x for x in range(1, num + 1)]
+            plt.bar(t, tdelay)
+            # plt.show()
+            plt.savefig('%s.jpg' % key)
+            plt.close()
+    '''
+
     # 计算时延平均值
     for key in dict:
         dict[key].append(np.std(dict[key][0]))  # 标准差
@@ -238,7 +251,7 @@ if __name__ == '__main__':
                                           "时延标准差", "最大时延", "最小时延"))
     for key, value in dict.items():
         print('{0:25s}:{1:15.5f}{2:10d}{3:15.5f}{4:15.5f}{5:15.5f}'
-              .format(key, value[0], value[1], value[2], value[3],value[4]))
+              .format(key, value[0], value[1], value[2], value[3], value[4]))
 
     # 输出到文件中
     f = open("Incalibdelay.txt", "w", encoding="utf-8")
@@ -246,5 +259,5 @@ if __name__ == '__main__':
                                           "时延标准差", "最大时延", "最小时延"), file=f)
     for key, value in dict.items():
         print('{0:25s}:{1:15.5f}{2:10d}{3:15.5f}{4:15.5f}{5:15.5f}'
-              .format(key, value[0], value[1], value[2], value[3],value[4]), file=f)
+              .format(key, value[0], value[1], value[2], value[3], value[4]), file=f)
     f.close()
